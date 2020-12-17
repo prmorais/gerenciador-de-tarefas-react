@@ -2,6 +2,8 @@ import { A, navigate } from 'hookrouter';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Form, Jumbotron, Modal } from 'react-bootstrap';
 
+import Tarefa from '../../models/Tarefa.model';
+
 const CadastrarTarefas: React.FC = () => {
 
   const [tarefa, setTarefa] = useState('');
@@ -10,6 +12,18 @@ const CadastrarTarefas: React.FC = () => {
 
   const cadastrar = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFormValidado(true);
+
+    if (event.currentTarget.checkValidity() === true) {
+      // Obtem as tarefas
+      const tarefaDb = localStorage['tarefas'];
+      const tarefas = tarefaDb ? JSON.parse(tarefaDb) : [];
+
+      // Persistir a tarefa
+      tarefas.push(new Tarefa(new Date().getTime(), tarefa, false));
+      localStorage['tarefas'] = JSON.stringify(tarefas);
+      setExibirModal(true);
+    }
 
   };
 
@@ -62,7 +76,7 @@ const CadastrarTarefas: React.FC = () => {
           </Modal.Header>
 
           <Modal.Body>
-            Tarefa adicionada com sucesso!
+            <p>Tarefa <strong>{tarefa}</strong> adicionada com sucesso!</p>
           </Modal.Body>
 
           <Modal.Footer>
