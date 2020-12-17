@@ -1,4 +1,4 @@
-import './GereciadoTarefas.css';
+import './GerenciadorTarefas.css';
 
 const GerenciadorTarefas = () => {
   return (
