@@ -51,6 +51,7 @@ const CadastrarTarefas: React.FC = () => {
               minLength={5}
               maxLength={100}
               required
+              data-testid="txt-tarefa"
             />
 
             <Form.Control.Feedback type="invalid" >
@@ -62,6 +63,7 @@ const CadastrarTarefas: React.FC = () => {
             <Button
               variant="success"
               type="submit"
+              data-testid="btn-cadastrar"
             >
               Cadastrar
             </Button>
@@ -70,13 +72,18 @@ const CadastrarTarefas: React.FC = () => {
           </Form.Group>
         </Form>
 
-        <Modal show={exibirModal} onHide={handleFecharModal}>
+        <Modal
+          show={exibirModal}
+          onHide={handleFecharModal}
+          data-testid="modal"
+        >
           <Modal.Header closeButton>
             <Modal.Title>Sucesso</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <p>Tarefa <strong>{tarefa}</strong> adicionada com sucesso!</p>
+            {/* <p>Tarefa <strong>{tarefa}</strong> adicionada com sucesso!</p> */}
+            Tarefa adicionada com sucesso!
           </Modal.Body>
 
           <Modal.Footer>
