@@ -1,16 +1,37 @@
-import { A } from 'hookrouter';
-import React from 'react';
+import { A, navigate } from 'hookrouter';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button, Form, Jumbotron, Modal } from 'react-bootstrap';
 
 const CadastrarTarefas: React.FC = () => {
+
+  const [tarefa, setTarefa] = useState('');
+  const [formValidado, setFormValidado] = useState(false);
+  const [exibirModal, setExibirModal] = useState(false);
+
+  const cadastrar = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+  };
+
+  const handleTextTarefa = (event: ChangeEvent<HTMLInputElement>) => {
+    setTarefa(event.target.value);
+  };
+
+  const handleFecharModal = () => {
+    setExibirModal(false);
+    navigate('/');
+  };
+
   return (
     <div>
       <h3 className="text-center">Cadastrar</h3>
       <Jumbotron>
-        <Form>
+        <Form validated={formValidado} noValidate onSubmit={cadastrar}>
           <Form.Group>
             <Form.Label>Tarefas</Form.Label>
             <Form.Control
+              value={tarefa}
+              onChange={handleTextTarefa}
               type="text"
               placeholder="Digite uma tarefa"
               minLength={5}
@@ -35,7 +56,7 @@ const CadastrarTarefas: React.FC = () => {
           </Form.Group>
         </Form>
 
-        <Modal show={false}>
+        <Modal show={exibirModal} onHide={handleFecharModal}>
           <Modal.Header closeButton>
             <Modal.Title>Sucesso</Modal.Title>
           </Modal.Header>
@@ -45,7 +66,7 @@ const CadastrarTarefas: React.FC = () => {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="success">Continuar</Button>
+            <Button onClick={handleFecharModal} variant="success">Continuar</Button>
           </Modal.Footer>
         </Modal>
       </Jumbotron>
