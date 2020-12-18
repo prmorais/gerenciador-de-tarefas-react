@@ -12,7 +12,12 @@ describe('Teste do componente que exibe um item da listagem de tarefas', () => {
 
   it('Deve renderizar o componente sem erros', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<ItemListaTarefas arrayTarefas={[]} />, div);
+    ReactDOM.render(
+      <ItemListaTarefas
+        arrayTarefas={[]}
+        setTarefas={() => false}
+      />, div,
+    );
     ReactDOM.unmountComponentAtNode(div);
   });
 
@@ -20,7 +25,10 @@ describe('Teste do componente que exibe um item da listagem de tarefas', () => {
     const { getByTestId } = render(
       <table>
         <tbody>
-          <ItemListaTarefas arrayTarefas={[tarefa]} />
+          <ItemListaTarefas
+            arrayTarefas={[tarefa]}
+            setTarefas={() => false}
+          />
         </tbody>
       </table>,
     );
@@ -31,7 +39,10 @@ describe('Teste do componente que exibe um item da listagem de tarefas', () => {
     const { getByTestId } = render(
       <table>
         <tbody>
-          <ItemListaTarefas arrayTarefas={[tarefaConcluida]} />
+          <ItemListaTarefas
+            arrayTarefas={[tarefaConcluida]}
+            setTarefas={() => false}
+          />
         </tbody>
       </table>,
     );
