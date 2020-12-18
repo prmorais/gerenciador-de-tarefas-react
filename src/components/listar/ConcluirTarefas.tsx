@@ -48,7 +48,7 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
   };
 
   return (
-    <span>
+    <span className={props.className}>
       <Button
         onClick={handleAbrirModal}
         className="btn-sm"
@@ -87,7 +87,6 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
             Não
           </Button>
         </Modal.Footer>
-
       </Modal>
     </span>
   );

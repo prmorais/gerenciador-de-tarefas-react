@@ -2,6 +2,7 @@ import { A } from 'hookrouter';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ConcluirTarefa from './ConcluirTarefas';
+import RemoverTarefas from './RemoverTarefas';
 
 type TTarefa = {
   id: number,
@@ -40,6 +41,11 @@ const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
               >
                 <FontAwesomeIcon icon={faEdit} />
               </A>
+              &nbsp;
+              <RemoverTarefas
+                tarefaProps={tarefa}
+                setTarefas={props.setTarefas}
+              />
             </td>
           </tr>,
         )
