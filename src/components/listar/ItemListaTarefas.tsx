@@ -25,10 +25,17 @@ const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
             >
               {tarefa.nome}
             </td>
+
             <td className="text-right">
               <A href={`/atualizar/${tarefa.id}`}
                 className={tarefa.concluida ? 'hidden' : 'btn btn-warning btn-sem'}
               >
+                <FontAwesomeIcon icon={faEdit} />
+              </A>
+            </td>
+
+            <td className="text-right">
+              <A href={`/atualizar/${tarefa.id}`}>
                 <FontAwesomeIcon icon={faEdit} />
               </A>
             </td>
