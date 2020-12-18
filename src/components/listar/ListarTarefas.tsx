@@ -23,7 +23,6 @@ const ListarTarefas: React.FC = () => {
     const tarefasDb = localStorage['tarefas'];
     let listarTarefas: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb) : [];
     setTarefas(listarTarefas);
-    // console.log(listarTarefas);
   };
 
   return (

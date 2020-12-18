@@ -11,7 +11,7 @@ type TTarefa = {
 
 type TConcluirTarefa = {
   tarefa: TTarefa,
-  className: string | undefined,
+  className?: string,
   setTarefas: Dispatch<SetStateAction<TTarefa[]>>,
 }
 
@@ -39,10 +39,8 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
       if (tarefa.id === props.tarefa.id) {
         tarefa.concluida = true;
       }
-
       return tarefasArray;
     });
-
 
     localStorage['tarefas'] = JSON.stringify(tarefasArray);
     props.setTarefas(tarefasArray);
@@ -54,7 +52,7 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
       <Button
         onClick={handleAbrirModal}
         className="btn-sm"
-        data-testid="btn-abri-modal"
+        data-testid="btn-abrir-modal"
       >
         <FontAwesomeIcon icon={faClipboardCheck} />
       </Button>
