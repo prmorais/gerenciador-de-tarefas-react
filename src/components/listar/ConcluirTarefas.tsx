@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Modal } from 'react-bootstrap';
@@ -9,7 +9,13 @@ type TTarefa = {
   concluida: boolean,
 }
 
-const ConcluirTarefa: React.FC<TTarefa> = ({ id, nome, concluida }) => {
+type TConcluirTarefa = {
+  tarefa: TTarefa,
+  className: string | undefined,
+  setTarefas: Dispatch<SetStateAction<TTarefa[]>>,
+}
+
+const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
 
   const [exibirModal, setExibirModal] = useState(false);
 
@@ -22,8 +28,25 @@ const ConcluirTarefa: React.FC<TTarefa> = ({ id, nome, concluida }) => {
     setExibirModal(false);
   };
 
-  const handleConcluirTarefa = () => {
+  const handleConcluirTarefa = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
 
+    // Obtem as tarefas
+    const tarefasDb: TTarefa[] = localStorage['tarefas'];
+    let tarefasArray: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb.toString()) : [];
+
+    tarefasArray.map(tarefa => {
+      if (tarefa.id === props.tarefa.id) {
+        tarefa.concluida = true;
+      }
+
+      return tarefasArray;
+    });
+
+
+    localStorage['tarefas'] = JSON.stringify(tarefasArray);
+    props.setTarefas(tarefasArray);
+    setExibirModal(false);
   };
 
   return (
@@ -47,7 +70,7 @@ const ConcluirTarefa: React.FC<TTarefa> = ({ id, nome, concluida }) => {
         <Modal.Body>
           Confirma a conclusão da tarefa:
           <br />
-          <strong>{nome}</strong>
+          <strong>{props.tarefa.nome}</strong>
         </Modal.Body>
         <Modal.Footer>
           <Button

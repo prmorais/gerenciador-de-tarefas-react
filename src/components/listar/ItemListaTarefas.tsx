@@ -1,6 +1,7 @@
 import { A } from 'hookrouter';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ConcluirTarefa from './ConcluirTarefas';
 
 type TTarefa = {
   id: number,
@@ -10,7 +11,7 @@ type TTarefa = {
 
 type TItemListaTarefa = {
   arrayTarefas: TTarefa[],
-  listarTarefas?: () => void,
+  setTarefas: React.Dispatch<React.SetStateAction<TTarefa[]>>
 }
 
 const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
@@ -27,15 +28,16 @@ const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
             </td>
 
             <td className="text-right">
+
+              <ConcluirTarefa
+                tarefa={tarefa}
+                className={tarefa.concluida ? 'hidden' : undefined}
+                setTarefas={props.setTarefas}
+              />
+              &nbsp;
               <A href={`/atualizar/${tarefa.id}`}
                 className={tarefa.concluida ? 'hidden' : 'btn btn-warning btn-sem'}
               >
-                <FontAwesomeIcon icon={faEdit} />
-              </A>
-            </td>
-
-            <td className="text-right">
-              <A href={`/atualizar/${tarefa.id}`}>
                 <FontAwesomeIcon icon={faEdit} />
               </A>
             </td>

@@ -23,6 +23,7 @@ const ListarTarefas: React.FC = () => {
     const tarefasDb = localStorage['tarefas'];
     let listarTarefas: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb) : [];
     setTarefas(listarTarefas);
+    // console.log(listarTarefas);
   };
 
   return (
@@ -54,13 +55,10 @@ const ListarTarefas: React.FC = () => {
         <tbody>
           <ItemListaTarefas
             arrayTarefas={tarefas}
-            listarTarefas={obterTarefas}
+            setTarefas={setTarefas}
           />
         </tbody>
       </Table>
-
-
-
     </div>
   );
 };
