@@ -54,7 +54,7 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
     return (
       <Pagination.Last
         key="pageLast"
-        onClick={() => props.mudarPagina(1)}
+        onClick={() => props.mudarPagina(numPaginas)}
         disabled={props.paginaAtual === numPaginas}
       />
     );

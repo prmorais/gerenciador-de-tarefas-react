@@ -5,6 +5,7 @@ import { Table } from 'react-bootstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ItemListaTarefas from './ItemListaTarefas';
+import Paginacao from './paginacao/Paginacao';
 
 type TTarefa = {
   id: number,
@@ -13,17 +14,27 @@ type TTarefa = {
 }
 
 const ListarTarefas: React.FC = () => {
-  const [tarefas, setTarefas] = useState<TTarefa[]>([]);
+  const ITENS_POR_PAG = 3;
 
-  useEffect(() => {
-    obterTarefas();
-  }, []);
+  const [tarefas, setTarefas] = useState<TTarefa[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [paginaAtual, setPaginaAtual] = useState(1);
 
   const obterTarefas = () => {
     const tarefasDb = localStorage['tarefas'];
     let listarTarefas: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb) : [];
-    setTarefas(listarTarefas);
+    setTotalItems(listarTarefas.length);
+    setTarefas(listarTarefas.splice((paginaAtual - 1) * ITENS_POR_PAG, ITENS_POR_PAG));
   };
+
+  const handleMudarPagina = (pagina: number) => {
+    obterTarefas();
+    setPaginaAtual(pagina);
+  };
+
+  useEffect(() => {
+    obterTarefas();
+  }, [paginaAtual]);
 
   return (
     <div className="text-center">
@@ -58,6 +69,13 @@ const ListarTarefas: React.FC = () => {
           />
         </tbody>
       </Table>
+
+      <Paginacao
+        totalItems={totalItems}
+        itemsPorPagina={ITENS_POR_PAG}
+        paginaAtual={paginaAtual}
+        mudarPagina={handleMudarPagina}
+      />
     </div>
   );
 };
