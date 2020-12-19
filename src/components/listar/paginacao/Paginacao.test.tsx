@@ -1,46 +1,37 @@
+import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
+import { render } from '@testing-library/react';
 // import { fireEvent, render } from '@testing-library/react';
-// import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
+import Paginacao from './Paginacao';
 
 
-//describe('Teste do componente de listagem de tarefas', () => {
-// const nomeTarefa = 'Tarefa para remover';
-// const tarefa = new Tarefa(1, nomeTarefa, false);
+describe('Teste do componente de paginação', () => {
 
-// it('Deve renderizar o componente sem erros', () => {
-//   const div = document.createElement('div');
-//   ReactDOM.render(
-//     <RemoverTarefas
-//       tarefaProps={tarefa}
-//       setTarefas={() => false}
-//     />, div,
-//   );
-//   ReactDOM.unmountComponentAtNode(div);
-// });
+  it('Deve renderizar o componente sem erros', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(
+      <Paginacao
+        totalItems={15}
+        itemsPorPagina={3}
+        paginaAtual={1}
+        mudarPagina={() => false}
+      />, div,
+    );
+    ReactDOM.unmountComponentAtNode(div);
+  });
 
-// it('Deve exibir a modal', () => {
-//   const { getByTestId } = render(
-//     <RemoverTarefas
-//       tarefaProps={tarefa}
-//       setTarefas={() => false}
-//     />,
-//   );
-//   fireEvent.click(getByTestId('btn-abrir-modal'));
-//   expect(getByTestId('modal')).toHaveTextContent(nomeTarefa);
-// });
-
-// it('Deve remover uma tarefa', () => {
-//   localStorage['tarefas'] = JSON.stringify([tarefa]);
-
-//   const { getByTestId } = render(
-//     <RemoverTarefas
-//       tarefaProps={tarefa}
-//       setTarefas={() => false}
-//     />,
-//   );
-//   fireEvent.click(getByTestId('btn-abrir-modal'));
-//   fireEvent.click(getByTestId('btn-remover-tarefa'));
-
-//   const tarefasDb = JSON.parse(localStorage['tarefas']);
-//   expect(tarefasDb.length).toBe(0);
-// });
-// });
+  it('Deve exibir a paginação contendo 3 páginas', () => {
+    const { getByTestId } = render(
+      <Paginacao
+        totalItems={15}
+        itemsPorPagina={5}
+        paginaAtual={1}
+        mudarPagina={() => false}
+      />,
+    );
+    const paginacao = getByTestId('paginacao');
+    expect(paginacao).toHaveTextContent('1');
+    expect(paginacao).toHaveTextContent('2');
+    expect(paginacao).toHaveTextContent('3');
+  });
+});
