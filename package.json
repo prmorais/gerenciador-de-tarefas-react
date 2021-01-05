@@ -50,7 +50,7 @@
         "single"
       ],
       "indent": [
-        "error",
+        "off",
         2
       ]
     },

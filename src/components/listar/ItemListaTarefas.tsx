@@ -1,25 +1,23 @@
+import { useContext } from 'react';
+
 import { A } from 'hookrouter';
+
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { GlobalContext } from '../../context/GlobalState';
+
 import ConcluirTarefa from './ConcluirTarefas';
 import RemoverTarefas from './RemoverTarefas';
 
-type TTarefa = {
-  id: number,
-  nome: string,
-  concluida: boolean,
-}
+const ItemListaTarefas = () => {
+  const { state } = useContext(GlobalContext);
+  const { tarefas } = state;
 
-type TItemListaTarefa = {
-  arrayTarefas: TTarefa[],
-  setTarefas: React.Dispatch<React.SetStateAction<TTarefa[]>>
-}
-
-const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
   return (
     <>
       {
-        props.arrayTarefas.map(tarefa =>
+        tarefas.map(tarefa =>
           <tr key={tarefa.id}>
             <td width="75%"
               style={{ textDecoration: tarefa.concluida ? 'line-through' : 'none' }}
@@ -33,7 +31,6 @@ const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
               <ConcluirTarefa
                 tarefa={tarefa}
                 className={tarefa.concluida ? 'hidden' : undefined}
-                setTarefas={props.setTarefas}
               />
               &nbsp;
               <A href={`/atualizar/${tarefa.id}`}
@@ -44,7 +41,6 @@ const ItemListaTarefas: React.FC<TItemListaTarefa> = (props) => {
               &nbsp;
               <RemoverTarefas
                 tarefaProps={tarefa}
-                setTarefas={props.setTarefas}
               />
             </td>
           </tr>,

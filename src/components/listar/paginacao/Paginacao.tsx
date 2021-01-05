@@ -1,19 +1,17 @@
+import { useContext } from 'react';
 import { Pagination } from 'react-bootstrap';
+import { GlobalContext } from '../../../context/GlobalState';
 
-type TPaginacao = {
-  totalItems: number,
-  itemsPorPagina: number,
-  paginaAtual: number,
-  mudarPagina: (f: number) => void,
-}
-const Paginacao: React.FC<TPaginacao> = (props) => {
+const Paginacao: React.FC = () => {
+
+  const { state, handleMudarPagina } = useContext(GlobalContext);
 
   const gerarPrimeiroItem = () => {
     return (
       <Pagination.First
         key="pageFirst"
-        onClick={() => props.mudarPagina(1)}
-        disabled={props.paginaAtual === 1}
+        onClick={() => handleMudarPagina(1)}
+        disabled={state.paginaAtual === 1}
       />
     );
   };
@@ -22,8 +20,8 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
     return (
       <Pagination.Prev
         key="pagePrev"
-        onClick={() => props.mudarPagina(props.paginaAtual - 1)}
-        disabled={props.paginaAtual === 1}
+        onClick={() => handleMudarPagina(state.paginaAtual - 1)}
+        disabled={state.paginaAtual === 1}
       />
     );
   };
@@ -32,8 +30,8 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
     return (
       <Pagination.Item
         key={pagina}
-        active={pagina === props.paginaAtual}
-        onClick={() => props.mudarPagina(pagina)}
+        active={pagina === state.paginaAtual}
+        onClick={() => handleMudarPagina(pagina)}
       >
         {pagina}
       </Pagination.Item>
@@ -44,8 +42,8 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
     return (
       <Pagination.Next
         key="pageNext"
-        onClick={() => props.mudarPagina(props.paginaAtual + 1)}
-        disabled={props.paginaAtual === numPaginas}
+        onClick={() => handleMudarPagina(state.paginaAtual + 1)}
+        disabled={state.paginaAtual === numPaginas}
       />
     );
   };
@@ -54,15 +52,15 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
     return (
       <Pagination.Last
         key="pageLast"
-        onClick={() => props.mudarPagina(numPaginas)}
-        disabled={props.paginaAtual === numPaginas}
+        onClick={() => handleMudarPagina(numPaginas)}
+        disabled={state.paginaAtual === numPaginas}
       />
     );
   };
 
   const obterPaginacao = () => {
     let items: JSX.Element[] = [];
-    const numPaginas = Math.ceil(props.totalItems / props.itemsPorPagina);
+    const numPaginas = Math.ceil(state.totalItens / state.itensPorPagina);
 
     items.push(gerarPrimeiroItem());
     items.push(gerarItemAnterior());
@@ -78,7 +76,7 @@ const Paginacao: React.FC<TPaginacao> = (props) => {
   };
 
   return (
-    <Pagination data-testid="paginacao">
+    <Pagination data-testid="paginacao" hidden={state.tarefas.length === 0}>
       { obterPaginacao()}
     </Pagination>
   );

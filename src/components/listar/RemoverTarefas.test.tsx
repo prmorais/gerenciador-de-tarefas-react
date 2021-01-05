@@ -1,5 +1,7 @@
+import React from "react";
 import { fireEvent, render } from '@testing-library/react';
 import ReactDOM from 'react-dom';
+
 import Tarefa from '../../models/Tarefa.model';
 import RemoverTarefas from './RemoverTarefas';
 

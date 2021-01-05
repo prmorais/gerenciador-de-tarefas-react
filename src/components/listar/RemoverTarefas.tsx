@@ -1,20 +1,25 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import { MouseEvent, useContext, useState } from 'react';
+
 import { Button, Modal } from 'react-bootstrap';
 
-type TTarefa = {
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { GlobalContext } from '../../context/GlobalState';
+
+interface ITarefa {
   id: number,
   nome: string,
   concluida: boolean,
 }
 
 type TRemoverTarefa = {
-  tarefaProps: TTarefa,
-  setTarefas: Dispatch<SetStateAction<TTarefa[]>>,
+  tarefaProps: ITarefa,
 }
 
-const RemoverTarefas: React.FC<TRemoverTarefa> = ({ tarefaProps, setTarefas }) => {
+const RemoverTarefas: React.FC<TRemoverTarefa> = ({ tarefaProps }) => {
+
+  const { removerTarefa } = useContext(GlobalContext);
   const [exibirModal, setExibirModal] = useState(false);
 
   const handleAbrirModal = (event: MouseEvent<HTMLButtonElement>) => {
@@ -23,20 +28,6 @@ const RemoverTarefas: React.FC<TRemoverTarefa> = ({ tarefaProps, setTarefas }) =
   };
 
   const handleFecharModal = () => {
-    setExibirModal(false);
-  };
-
-  const handleRemoverTarefa = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    // Obtem as tarefas
-    const tarefasDb: TTarefa[] = localStorage['tarefas'];
-    let tarefasArray: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb.toString()) : [];
-
-    tarefasArray = tarefasArray.filter(tarefa => tarefa.id !== tarefaProps.id);
-
-    localStorage['tarefas'] = JSON.stringify(tarefasArray);
-    setTarefas(tarefasArray);
     setExibirModal(false);
   };
 
@@ -67,7 +58,10 @@ const RemoverTarefas: React.FC<TRemoverTarefa> = ({ tarefaProps, setTarefas }) =
         <Modal.Footer>
           <Button
             variant="primary"
-            onClick={handleRemoverTarefa}
+            onClick={() => {
+              removerTarefa(tarefaProps.id);
+              setExibirModal(false);
+            }}
             data-testid="btn-remover-tarefa"
           >
             Sim

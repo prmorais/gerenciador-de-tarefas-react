@@ -1,7 +1,11 @@
-import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import { MouseEvent, useContext, useState } from 'react';
+
+import { Button, Modal } from 'react-bootstrap';
+
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Modal } from 'react-bootstrap';
+
+import { GlobalContext } from '../../context/GlobalState';
 
 type TTarefa = {
   id: number,
@@ -12,43 +16,21 @@ type TTarefa = {
 type TConcluirTarefa = {
   tarefa: TTarefa,
   className?: string,
-  setTarefas: Dispatch<SetStateAction<TTarefa[]>>,
 }
 
-const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
+const ConcluirTarefa: React.FC<TConcluirTarefa> = ({ tarefa, className }) => {
+
+  const { concluirTarefa } = useContext(GlobalContext);
 
   const [exibirModal, setExibirModal] = useState(false);
 
-  const handleAbrirModal = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleAbrirModal = (event: MouseEvent) => {
     event.preventDefault();
     setExibirModal(true);
   };
 
-  const handleFecharModal = () => {
-    setExibirModal(false);
-  };
-
-  const handleConcluirTarefa = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    // Obtem as tarefas
-    const tarefasDb: TTarefa[] = localStorage['tarefas'];
-    let tarefasArray: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb.toString()) : [];
-
-    tarefasArray.map(tarefa => {
-      if (tarefa.id === props.tarefa.id) {
-        tarefa.concluida = true;
-      }
-      return tarefasArray;
-    });
-
-    localStorage['tarefas'] = JSON.stringify(tarefasArray);
-    props.setTarefas(tarefasArray);
-    setExibirModal(false);
-  };
-
   return (
-    <span className={props.className}>
+    <span className={className}>
       <Button
         onClick={handleAbrirModal}
         className="btn-sm"
@@ -59,7 +41,7 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
 
       <Modal
         show={exibirModal}
-        onHide={handleFecharModal}
+        onHide={() => setExibirModal(false)}
         data-testid="modal"
       >
         <Modal.Header>
@@ -68,12 +50,16 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
         <Modal.Body>
           Confirma a conclusão da tarefa:
           <br />
-          <strong>{props.tarefa.nome}</strong>
+          <strong>{tarefa.nome}</strong>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="primary"
-            onClick={handleConcluirTarefa}
+            onClick={() => {
+              concluirTarefa(tarefa.id);
+              setExibirModal(false);
+            }
+            }
             data-testid="btn-concluir-tarefa"
           >
             Sim
@@ -81,7 +67,7 @@ const ConcluirTarefa: React.FC<TConcluirTarefa> = (props) => {
 
           <Button
             variant="light"
-            onClick={handleFecharModal}
+            onClick={() => setExibirModal(false)}
             data-testid="btn-fechar-modal"
           >
             Não

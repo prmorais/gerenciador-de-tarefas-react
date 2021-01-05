@@ -1,40 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
+
 import { A } from 'hookrouter';
 
 import { Table } from 'react-bootstrap';
+
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { GlobalContext } from '../../context/GlobalState';
+
 import ItemListaTarefas from './ItemListaTarefas';
 import Paginacao from './paginacao/Paginacao';
 
-type TTarefa = {
-  id: number,
-  nome: string,
-  concluida: boolean,
-}
-
 const ListarTarefas: React.FC = () => {
-  const ITENS_POR_PAG = 3;
 
-  const [tarefas, setTarefas] = useState<TTarefa[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [paginaAtual, setPaginaAtual] = useState(1);
-
-  const obterTarefas = () => {
-    const tarefasDb = localStorage['tarefas'];
-    let listarTarefas: TTarefa[] = tarefasDb ? JSON.parse(tarefasDb) : [];
-    setTotalItems(listarTarefas.length);
-    setTarefas(listarTarefas.splice((paginaAtual - 1) * ITENS_POR_PAG, ITENS_POR_PAG));
-  };
-
-  const handleMudarPagina = (pagina: number) => {
-    obterTarefas();
-    setPaginaAtual(pagina);
-  };
+  const { state, handleMudarPagina } = useContext(GlobalContext);
+  const { paginaAtual } = state;
 
   useEffect(() => {
-    obterTarefas();
+    handleMudarPagina(paginaAtual);
   }, [paginaAtual]);
+
 
   return (
     <div className="text-center">
@@ -58,24 +44,15 @@ const ListarTarefas: React.FC = () => {
                 &nbsp;
                 Nova tarefa
               </A>
-
             </th>
           </tr>
         </thead>
         <tbody>
-          <ItemListaTarefas
-            arrayTarefas={tarefas}
-            setTarefas={setTarefas}
-          />
+          <ItemListaTarefas />
         </tbody>
       </Table>
 
-      <Paginacao
-        totalItems={totalItems}
-        itemsPorPagina={ITENS_POR_PAG}
-        paginaAtual={paginaAtual}
-        mudarPagina={handleMudarPagina}
-      />
+      <Paginacao />
     </div>
   );
 };

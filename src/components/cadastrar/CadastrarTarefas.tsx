@@ -1,12 +1,17 @@
+import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
+
 import { A, navigate } from 'hookrouter';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+
 import { Button, Form, Jumbotron, Modal } from 'react-bootstrap';
 
-import Tarefa from '../../models/Tarefa.model';
+import { GlobalContext } from '../../context/GlobalState';
 
 const CadastrarTarefas: React.FC = () => {
 
-  const [tarefa, setTarefa] = useState('');
+  const { handleTextTarefa } = useContext(GlobalContext);
+
+  const [nome, setNome] = useState('');
+
   const [formValidado, setFormValidado] = useState(false);
   const [exibirModal, setExibirModal] = useState(false);
 
@@ -15,21 +20,17 @@ const CadastrarTarefas: React.FC = () => {
     setFormValidado(true);
 
     if (event.currentTarget.checkValidity() === true) {
-      // Obtem as tarefas
-      const tarefaDb = localStorage['tarefas'];
-      const tarefas = tarefaDb ? JSON.parse(tarefaDb) : [];
+      handleTextTarefa(nome);
 
-      // Persistir a tarefa
-      tarefas.push(new Tarefa(new Date().getTime(), tarefa, false));
-      localStorage['tarefas'] = JSON.stringify(tarefas);
+      // Exibe o modal de confirmação
       setExibirModal(true);
     }
 
   };
-
-  const handleTextTarefa = (event: ChangeEvent<HTMLInputElement>) => {
-    setTarefa(event.target.value);
+  const onChangeNome = (e: ChangeEvent<HTMLInputElement>) => {
+    setNome(e.target.value);
   };
+
 
   const handleFecharModal = () => {
     setExibirModal(false);
@@ -44,8 +45,9 @@ const CadastrarTarefas: React.FC = () => {
           <Form.Group>
             <Form.Label>Tarefas</Form.Label>
             <Form.Control
-              value={tarefa}
-              onChange={handleTextTarefa}
+              value={nome}
+              name="nome"
+              onChange={onChangeNome}
               type="text"
               placeholder="Digite uma tarefa"
               minLength={5}
@@ -82,8 +84,7 @@ const CadastrarTarefas: React.FC = () => {
           </Modal.Header>
 
           <Modal.Body>
-            {/* <p>Tarefa <strong>{tarefa}</strong> adicionada com sucesso!</p> */}
-            Tarefa adicionada com sucesso!
+            <p><strong>{nome}</strong> adicionada com sucesso!</p>
           </Modal.Body>
 
           <Modal.Footer>
