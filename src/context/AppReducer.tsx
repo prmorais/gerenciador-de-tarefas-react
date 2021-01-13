@@ -1,14 +1,16 @@
 import Tarefa from '../models/Tarefa.model';
 import {
+  ADICIONAR_TAREFA,
+  CONCLUIR_TAREFA,
   initialState,
   InitialStateType,
+  ListAction,
+  MUDAR_PAGINA,
+  REMOVER_TAREFA,
   TarefaType,
 } from './types/ContextTypes';
 
-export const AppReducer = (state: InitialStateType = initialState, action: any) => {
-  // Obtém as variáves da action com destructor
-  const { id, pagina, nome } = action;
-
+export const AppReducer = (state = initialState, action: ListAction): InitialStateType => {
   // Obtém as variáves do state com destructor
   const { itensPorPagina, paginaAtual, tarefas } = state;
 
@@ -27,9 +29,10 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
   let novaPagina = paginaAtual;
 
   switch (action.type) {
-    case 'MUDAR_PAGINA':
+    case MUDAR_PAGINA:
+      const { pagina } = action.payload;
       if (pagina) {
-        listarTarefas = listarTarefas.splice((pagina - 1) * itensPorPagina, itensPorPagina);
+        listarTarefas = listarTarefas.splice((action.payload.pagina - 1) * itensPorPagina, itensPorPagina);
       }
 
       console.log('ACTION MUDAR PAGINA\n--------------------\nPagina atual: ' + paginaAtual +
@@ -44,9 +47,11 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
 
       };
 
-    case 'CONCLUIR_TAREFA':
+    case CONCLUIR_TAREFA:
 
       listarTarefas.map(tarefa => {
+        const { id } = action.payload;
+
         if (tarefa.id === id) {
           tarefa.concluida = true;
         }
@@ -71,28 +76,23 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
         tarefas: listarTarefas,
       };
 
-    case 'ADICIONAR_TAREFA':
+    case ADICIONAR_TAREFA:
+      const { nome } = action.payload;
       if (nome) {
         const novaTarefa = new Tarefa(new Date().getTime(), nome, false);
         listarTarefas.push(novaTarefa);
         localStorage['tarefas'] = JSON.stringify(listarTarefas);
 
-        if (paginaAtual === numPaginas && totalItensPorPagina === itensPorPagina) {
+        if (totalItensPorPagina === itensPorPagina) {
           novaPagina = paginaAtual + 1;
+        }
+        if (numPaginas === 0) {
+          novaPagina = 1;
         } else {
           novaPagina = numPaginas;
         }
 
       }
-
-      // if (Math.ceil(
-      //   totalItens / itensPorPagina) === paginaAtual &&
-      //   tarefas.length === itensPorPagina
-      // ) {
-      //   novaPagina = paginaAtual + 1;
-      // } else {
-      //   novaPagina = Math.ceil(totalItens / itensPorPagina);
-      // }
 
       // Aplica a paginação
       listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
@@ -108,7 +108,9 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
         tarefas: listarTarefas,
       };
 
-    case 'REMOVER_TAREFA':
+    case REMOVER_TAREFA:
+      const { id } = action.payload;
+
       // Filtra a lista de tarefas no localStage excluindo uma tarefa
       listarTarefas = listarTarefas.filter(tarefa => tarefa.id !== id);
 

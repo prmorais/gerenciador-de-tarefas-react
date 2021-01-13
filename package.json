@@ -13,7 +13,6 @@
     "@types/node": "14.14.14",
     "@types/react": "17.0.0",
     "@types/react-dom": "17.0.0",
-    "@types/hookrouter": "^2.2.5",
     "bootstrap": "^4.5.3",
     "hookrouter": "^1.2.5",
     "prop-types": "^15.7.2",
@@ -76,5 +75,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/hookrouter": "2.2.5"
   }
 }

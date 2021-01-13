@@ -2,9 +2,12 @@ import React, { createContext, useReducer } from 'react';
 
 import { AppReducer } from './AppReducer';
 import {
+  ADICIONAR_TAREFA,
+  CONCLUIR_TAREFA,
+  MUDAR_PAGINA,
+  REMOVER_TAREFA,
   initialAdicionar,
   initialConcluir,
-  // initialDispatch,
   initialMudarPagina,
   initialRemover,
   initialState,
@@ -26,32 +29,37 @@ const GlobalProvider: React.FC = ({ children }) => {
 
   const handleMudarPagina = (pagina: number) => {
     dispatch({
-      type: 'MUDAR_PAGINA',
-      pagina,
+      type: MUDAR_PAGINA,
+      payload: {
+        pagina,
+      },
     });
   };
 
   const concluirTarefa = (id: number) => {
     dispatch({
-      type: 'CONCLUIR_TAREFA',
-      // pagina,
-      id,
+      type: CONCLUIR_TAREFA,
+      payload: {
+        id,
+      },
     });
   };
 
   const handleTextTarefa = (nome: string) => {
     dispatch({
-      type: 'ADICIONAR_TAREFA',
-      // pagina,
-      nome,
+      type: ADICIONAR_TAREFA,
+      payload: {
+        nome,
+      },
     });
   };
 
   const removerTarefa = (id: number) => {
     dispatch({
-      type: 'REMOVER_TAREFA',
-      // pagina,
-      id,
+      type: REMOVER_TAREFA,
+      payload: {
+        id,
+      },
     });
   };
 
@@ -61,7 +69,6 @@ const GlobalProvider: React.FC = ({ children }) => {
     removerTarefa,
     handleTextTarefa,
     handleMudarPagina,
-    //dispatch,
   };
 
   return (
