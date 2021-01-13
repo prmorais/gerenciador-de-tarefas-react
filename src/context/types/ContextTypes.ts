@@ -12,7 +12,7 @@ export type InitialStateType = {
   itensPorPagina: number,
   paginaAtual: number,
 
-}
+};
 
 export const initialState: InitialStateType = {
   tarefas: [],
@@ -26,7 +26,7 @@ export type tarefaAction = {
   id?: number,
   nome?: string,
   pagina?: number,
-}
+};
 
 export const initialConcluir: Dispatch<number> = (f: number) => f;
 export const initialRemover: Dispatch<number> = (f: number) => f;

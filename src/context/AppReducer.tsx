@@ -2,7 +2,6 @@ import Tarefa from '../models/Tarefa.model';
 import {
   initialState,
   InitialStateType,
-  // tarefaAction,
   TarefaType,
 } from './types/ContextTypes';
 
@@ -16,66 +15,59 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
   // Acessa o localStorage e pega a lista de tarefas
   const tarefasDb = localStorage['tarefas'];
   let listarTarefas: TarefaType[] = tarefasDb ? JSON.parse(tarefasDb) : [];
-  let novaPagina = paginaAtual;
 
-  // Seta o total de itens do state igual ao tamanho da lista de tarefas do localStorage
+  // Cria a constante totalItens e atribui a ela o tamanho da lista de tarefas do localStorage
   const totalItens = listarTarefas.length;
+  const totalItensPorPagina = tarefas.length;
 
-  // const mudarPagina = (pag: number, pagAtual: number, itensPorPag: number) => {
-  //   if (pag) {
-  //     pagAtual = pag;
-  //     return listarTarefas = listarTarefas.splice((pagAtual - 1) * itensPorPag, itensPorPag);
-  //   }
-  // };
+  // Calcula o número de páginas para paginação
+  const numPaginas = Math.ceil(totalItens / itensPorPagina);
+
+  // Cria a variável novaPágina e atribui a ela o valor da página atual
+  let novaPagina = paginaAtual;
 
   switch (action.type) {
     case 'MUDAR_PAGINA':
-      // mudarPagina(pagina!, paginaAtual, itensPorPagina);
       if (pagina) {
-        // let paginaAtual = pagina;
         listarTarefas = listarTarefas.splice((pagina - 1) * itensPorPagina, itensPorPagina);
       }
 
-      console.log('PAGINA EM MUDAR PAGINA ' + paginaAtual);
+      console.log('ACTION MUDAR PAGINA\n--------------------\nPagina atual: ' + paginaAtual +
+        '\nTotal de itens: ' + totalItens);
 
       return {
         ...state,
         paginaAtual: pagina,
-        itensPorPagina: itensPorPagina,
-        totalItens: totalItens,
+        itensPorPagina,
+        totalItens,
         tarefas: listarTarefas,
 
       };
 
     case 'CONCLUIR_TAREFA':
-      // tarefas.map(tarefa => {
-      //   if (tarefa.id === id) {
-      //     tarefa.concluida = true;
-      //     // tarefa = { ...tarefa, concluida: true };
-      //   }
-      //   return tarefa;
-      // });
 
-      listarTarefas.map(t => {
-        if (t.id === id) {
-          t.concluida = true;
-          // t = { ...t, concluida: true };
+      listarTarefas.map(tarefa => {
+        if (tarefa.id === id) {
+          tarefa.concluida = true;
         }
-        return t;
+
+        return tarefa;
       });
 
+      // Salva no localStorage
       localStorage['tarefas'] = JSON.stringify(listarTarefas);
-      // listarTarefas = mudarPagina(pagina!, paginaAtual, itensPorPagina);
-      // paginaAtual = pagina;
-      console.log('PAGINA EM CONCLUIR TAREFA ' + paginaAtual);
-      // let paginaAtual = pagina;
-      listarTarefas = listarTarefas.splice((pagina - 1) * itensPorPagina, itensPorPagina);
+
+      // Aplica a paginação
+      listarTarefas = listarTarefas.splice((paginaAtual - 1) * itensPorPagina, itensPorPagina);
+
+      console.log('ACTION CONCLUIR TAREFA\n--------------------\nPagina atual: ' + paginaAtual +
+        '\nTotal de itens: ' + totalItens + '\nNova pagina: ' + novaPagina);
 
       return {
         ...state,
         paginaAtual,
-        itensPorPagina: itensPorPagina,
-        totalItens: totalItens,
+        itensPorPagina,
+        totalItens,
         tarefas: listarTarefas,
       };
 
@@ -85,25 +77,34 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
         listarTarefas.push(novaTarefa);
         localStorage['tarefas'] = JSON.stringify(listarTarefas);
 
-      }
-      // let paginaAtual = pagina;
-      console.log('NOVA PAGINA EM ADICIONAR TAREFA ANTES DO IF ' + novaPagina);
+        if (paginaAtual === numPaginas && totalItensPorPagina === itensPorPagina) {
+          novaPagina = paginaAtual + 1;
+        } else {
+          novaPagina = numPaginas;
+        }
 
-
-      if (tarefas.length === itensPorPagina && paginaAtual !== 0) {
-        novaPagina = paginaAtual + 1;
-        console.log('NOVA PAGINA EM ADICIONAR TAREFA DENTRO DO IF ' + novaPagina);
       }
 
-      console.log('NOVA PAGINA EM ADICIONAR TAREFA DEPOS DO IF ' + novaPagina);
+      // if (Math.ceil(
+      //   totalItens / itensPorPagina) === paginaAtual &&
+      //   tarefas.length === itensPorPagina
+      // ) {
+      //   novaPagina = paginaAtual + 1;
+      // } else {
+      //   novaPagina = Math.ceil(totalItens / itensPorPagina);
+      // }
 
+      // Aplica a paginação
       listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
+
+      console.log('ACTION ADICIONAR TAREFA\n--------------------\nPagina atual: ' + paginaAtual +
+        '\nTotal de itens: ' + totalItens + '\nNova Pagina: ' + novaPagina);
 
       return {
         ...state,
         paginaAtual: novaPagina,
-        itensPorPagina: itensPorPagina,
-        totalItens: totalItens,
+        itensPorPagina,
+        totalItens,
         tarefas: listarTarefas,
       };
 
@@ -114,22 +115,25 @@ export const AppReducer = (state: InitialStateType = initialState, action: any) 
       // Salava no localStorage a lista de tarefas
       localStorage['tarefas'] = JSON.stringify(listarTarefas);
 
-      // let novaPagina = paginaAtual;
-
-      if (tarefas.length === 1 && paginaAtual !== 1) {
+      if (tarefas.length === 1) {
         novaPagina = paginaAtual - 1;
+        listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
+      } else {
+        listarTarefas = listarTarefas.splice((paginaAtual - 1) * itensPorPagina, itensPorPagina);
+
       }
 
-      listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
+
+      console.log('ACTION REMOVER TAREFA\n--------------------\nPagina atual: ' + paginaAtual +
+        '\nTotal de itens: ' + totalItens);
 
       return {
         ...state,
         paginaAtual: novaPagina,
-        itensPorPagina: itensPorPagina,
-        totalItens: totalItens,
+        itensPorPagina,
+        totalItens,
         tarefas: listarTarefas,
       };
-
     default:
       return state;
   }

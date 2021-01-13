@@ -5,13 +5,14 @@ import { GlobalContext } from '../../../context/GlobalState';
 const Paginacao: React.FC = () => {
 
   const { state, handleMudarPagina } = useContext(GlobalContext);
+  const { paginaAtual, itensPorPagina, totalItens } = state;
 
   const gerarPrimeiroItem = () => {
     return (
       <Pagination.First
         key="pageFirst"
         onClick={() => handleMudarPagina(1)}
-        disabled={state.paginaAtual === 1}
+        disabled={paginaAtual === 1}
       />
     );
   };
@@ -20,8 +21,8 @@ const Paginacao: React.FC = () => {
     return (
       <Pagination.Prev
         key="pagePrev"
-        onClick={() => handleMudarPagina(state.paginaAtual - 1)}
-        disabled={state.paginaAtual === 1}
+        onClick={() => handleMudarPagina(paginaAtual - 1)}
+        disabled={paginaAtual === 1}
       />
     );
   };
@@ -30,7 +31,7 @@ const Paginacao: React.FC = () => {
     return (
       <Pagination.Item
         key={pagina}
-        active={pagina === state.paginaAtual}
+        active={pagina === paginaAtual}
         onClick={() => handleMudarPagina(pagina)}
       >
         {pagina}
@@ -42,8 +43,8 @@ const Paginacao: React.FC = () => {
     return (
       <Pagination.Next
         key="pageNext"
-        onClick={() => handleMudarPagina(state.paginaAtual + 1)}
-        disabled={state.paginaAtual === numPaginas}
+        onClick={() => handleMudarPagina(paginaAtual + 1)}
+        disabled={paginaAtual === numPaginas}
       />
     );
   };
@@ -53,14 +54,14 @@ const Paginacao: React.FC = () => {
       <Pagination.Last
         key="pageLast"
         onClick={() => handleMudarPagina(numPaginas)}
-        disabled={state.paginaAtual === numPaginas}
+        disabled={paginaAtual === numPaginas}
       />
     );
   };
 
   const obterPaginacao = () => {
     let items: JSX.Element[] = [];
-    const numPaginas = Math.ceil(state.totalItens / state.itensPorPagina);
+    const numPaginas = Math.ceil(totalItens / itensPorPagina);
 
     items.push(gerarPrimeiroItem());
     items.push(gerarItemAnterior());
