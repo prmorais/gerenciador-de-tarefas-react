@@ -15,8 +15,8 @@ export const AppReducer = (state = initialState, action: ListAction): InitialSta
   const { itensPorPagina, paginaAtual, tarefas } = state;
 
   // Acessa o localStorage e pega a lista de tarefas
-  const tarefasDb = localStorage['tarefas'];
-  let listarTarefas: TarefaType[] = tarefasDb ? JSON.parse(tarefasDb) : [];
+  const tarefasDb: TarefaType[] = localStorage['tarefas'];
+  let listarTarefas: TarefaType[] = tarefasDb ? JSON.parse(tarefasDb.toString()) : [];
 
   // Cria a constante totalItens e atribui a ela o tamanho da lista de tarefas do localStorage
   const totalItens = listarTarefas.length;
