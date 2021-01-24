@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Pagination } from 'react-bootstrap';
 import { GlobalContext } from '../../../context/GlobalState';
 
@@ -6,6 +6,10 @@ const Paginacao: React.FC = () => {
 
   const { state, handleMudarPagina } = useContext(GlobalContext);
   const { paginaAtual, itensPorPagina, totalItens } = state;
+
+  useEffect(() => {
+    handleMudarPagina(paginaAtual);
+  }, [paginaAtual]);
 
   const gerarPrimeiroItem = () => {
     return (
@@ -77,7 +81,10 @@ const Paginacao: React.FC = () => {
   };
 
   return (
-    <Pagination data-testid="paginacao" hidden={state.tarefas.length === 0}>
+    <Pagination
+      data-testid="paginacao"
+      hidden={state.tarefas.length === 0}
+    >
       { obterPaginacao()}
     </Pagination>
   );

@@ -4,13 +4,14 @@ import {
   CONCLUIR_TAREFA,
   initialState,
   InitialStateType,
-  ListAction,
+  // ListAction,
   MUDAR_PAGINA,
   REMOVER_TAREFA,
+  TarefaAction,
   TarefaType,
 } from './types/ContextTypes';
 
-export const AppReducer = (state = initialState, action: ListAction): InitialStateType => {
+export const AppReducer = (state = initialState, action: TarefaAction): InitialStateType => {
   // Obtém as variáves do state com destructor
   const { itensPorPagina, paginaAtual, tarefas } = state;
 
@@ -18,21 +19,29 @@ export const AppReducer = (state = initialState, action: ListAction): InitialSta
   const tarefasDb: TarefaType[] = localStorage['tarefas'];
   let listarTarefas: TarefaType[] = tarefasDb ? JSON.parse(tarefasDb.toString()) : [];
 
-  // Cria a constante totalItens e atribui a ela o tamanho da lista de tarefas do localStorage
-  const totalItens = listarTarefas.length;
-  const totalItensPorPagina = tarefas.length;
+  // Cria a variável totalItens e atribui a ela o tamanho da lista de tarefas do localStorage
+  let totalItens = listarTarefas.length;
 
-  // Calcula o número de páginas para paginação
-  const numPaginas = Math.ceil(totalItens / itensPorPagina);
-
-  // Cria a variável novaPágina e atribui a ela o valor da página atual
+  // Cria a variável novaPagina e atribui a ela o valor da página atual
   let novaPagina = paginaAtual;
+
+  // Cria a variável numPaginas e atribui zero
+  let numPaginas = 0;
+
+  // Método de calcula e retorna o número de páginas
+  const calculaNumPagina = (itens: number): number => {
+    return Math.ceil(totalItens / itensPorPagina);
+  };
 
   switch (action.type) {
     case MUDAR_PAGINA:
-      const { pagina } = action.payload;
+      const { pagina } = action;
+
+      // Se o parâmetro pagina que vem na action for diferente de nulo ou undefined
       if (pagina) {
-        listarTarefas = listarTarefas.splice((action.payload.pagina - 1) * itensPorPagina, itensPorPagina);
+
+        // Aplica a paginação usuando o valor do parâmetro pagina
+        listarTarefas = listarTarefas.splice((pagina - 1) * itensPorPagina, itensPorPagina);
       }
 
       console.log('ACTION MUDAR PAGINA\n--------------------\nPagina atual: ' + paginaAtual +
@@ -48,9 +57,8 @@ export const AppReducer = (state = initialState, action: ListAction): InitialSta
       };
 
     case CONCLUIR_TAREFA:
-
       listarTarefas.map(tarefa => {
-        const { id } = action.payload;
+        const { id } = action;
 
         if (tarefa.id === id) {
           tarefa.concluida = true;
@@ -77,22 +85,28 @@ export const AppReducer = (state = initialState, action: ListAction): InitialSta
       };
 
     case ADICIONAR_TAREFA:
-      const { nome } = action.payload;
+      const { nome } = action;
+
       if (nome) {
+        // Cria uma nova tarefa
         const novaTarefa = new Tarefa(new Date().getTime(), nome, false);
+
+        // Adiciona a tarefa criada ao array listarTarefas
         listarTarefas.push(novaTarefa);
+
+        // Salva o array no localStorage
         localStorage['tarefas'] = JSON.stringify(listarTarefas);
 
-        if (totalItensPorPagina === itensPorPagina) {
-          novaPagina = paginaAtual + 1;
-        }
-        if (numPaginas === 0) {
-          novaPagina = 1;
-        } else {
-          novaPagina = numPaginas;
-        }
+        // Atualiza o total de itens
+        totalItens = listarTarefas.length;
 
+        // Recalcula no numero de páginas
+        numPaginas = calculaNumPagina(totalItens);
+
+        // Atribui a novaPagina o novo numero de paginas
+        novaPagina = numPaginas;
       }
+
 
       // Aplica a paginação
       listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
@@ -109,22 +123,38 @@ export const AppReducer = (state = initialState, action: ListAction): InitialSta
       };
 
     case REMOVER_TAREFA:
-      const { id } = action.payload;
+      const id_remover = action.id;
 
       // Filtra a lista de tarefas no localStage excluindo uma tarefa
-      listarTarefas = listarTarefas.filter(tarefa => tarefa.id !== id);
+      listarTarefas = listarTarefas.filter(tarefa => tarefa.id !== id_remover);
 
       // Salava no localStorage a lista de tarefas
       localStorage['tarefas'] = JSON.stringify(listarTarefas);
 
-      if (tarefas.length === 1) {
-        novaPagina = paginaAtual - 1;
-        listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
-      } else {
-        listarTarefas = listarTarefas.splice((paginaAtual - 1) * itensPorPagina, itensPorPagina);
+      // Atualiza o total de itens
+      totalItens = listarTarefas.length;
 
+      // Recalcula no numero de páginas
+      numPaginas = calculaNumPagina(totalItens);
+
+      // Atribui a novaPagina o novo numero de paginas
+      novaPagina = calculaNumPagina(listarTarefas.length);
+
+
+      // Se o array tarefas no state for igual a 3, que é o valor padrão do itensPorPagina
+      if (tarefas.length === itensPorPagina) {
+
+        // Atribui a variável novaPagina o valor da constante paginaAtual que está no state
+        novaPagina = paginaAtual;
+      }
+      else {
+
+        // Se não, atribui a variável novaPagina o valor da variável numPáginas
+        novaPagina = numPaginas;
       }
 
+      // Aplica a paginação
+      listarTarefas = listarTarefas.splice((novaPagina - 1) * itensPorPagina, itensPorPagina);
 
       console.log('ACTION REMOVER TAREFA\n--------------------\nPagina atual: ' + paginaAtual +
         '\nTotal de itens: ' + totalItens);

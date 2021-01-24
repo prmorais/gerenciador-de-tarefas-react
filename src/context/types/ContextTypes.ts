@@ -33,37 +33,51 @@ export const initialState: InitialStateType = {
 //   pagina?: number,
 // };
 
-export interface AddTarefaAction {
-  type: typeof ADICIONAR_TAREFA,
-  payload: {
+export type TarefaAction =
+| {
+    type: typeof ADICIONAR_TAREFA;
     nome: string;
-  },
-};
+  }
+| {
+    type: typeof CONCLUIR_TAREFA | typeof REMOVER_TAREFA;
+    id: number;
+  }
+| {
+  type: typeof MUDAR_PAGINA;
+  pagina: number;
+}
 
-export interface ConcluirTarefaAction {
-  type: typeof CONCLUIR_TAREFA,
-  payload: {
-    id: number
-  },
-};
+// export interface AddTarefaAction {
+//   type: typeof ADICIONAR_TAREFA,
+//   payload: {
+//     nome: string;
+//   },
+// };
 
-export interface RemoverTarefaAction {
-  type: typeof REMOVER_TAREFA,
-  payload: {
-    id: number
-  },
-};
+// export interface ConcluirTarefaAction {
+//   type: typeof CONCLUIR_TAREFA,
+//   payload: {
+//     id: number
+//   },
+// };
 
-export interface MudarPaginaAction {
-  type: typeof MUDAR_PAGINA,
-  payload: {
-    pagina: number
-  },
-};
+// export interface RemoverTarefaAction {
+//   type: typeof REMOVER_TAREFA,
+//   payload: {
+//     id: number
+//   },
+// };
 
-export type ListAction = AddTarefaAction | ConcluirTarefaAction | RemoverTarefaAction | MudarPaginaAction;
+// export interface MudarPaginaAction {
+//   type: typeof MUDAR_PAGINA,
+//   payload: {
+//     pagina: number
+//   },
+// };
 
-export const initialConcluir: Dispatch<number> = (f: number) => f;
-export const initialRemover: Dispatch<number> = (f: number) => f;
-export const initialMudarPagina: Dispatch<number> = (pag: number) => pag;
+// export type ListAction = AddTarefaAction | ConcluirTarefaAction | RemoverTarefaAction | MudarPaginaAction;
+
+export const initialConcluir: Dispatch<number> = (id: number) => id;
+export const initialRemover: Dispatch<number> = (id: number) => id;
+export const initialMudarPagina = (pag: number) => {};
 export const initialAdicionar: Dispatch<string> = (nome: string) => nome;

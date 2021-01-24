@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+// import { useContext, useEffect } from 'react';
 
 import { A } from 'hookrouter';
 
@@ -7,19 +7,19 @@ import { Table } from 'react-bootstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { GlobalContext } from '../../context/GlobalState';
+// import { GlobalContext } from '../../context/GlobalState';
 
 import ItemListaTarefas from './ItemListaTarefas';
 import Paginacao from './paginacao/Paginacao';
 
 const ListarTarefas: React.FC = () => {
 
-  const { state, handleMudarPagina } = useContext(GlobalContext);
-  const { paginaAtual } = state;
+  // const { state, handleMudarPagina } = useContext(GlobalContext);
+  // const { paginaAtual } = state;
 
-  useEffect(() => {
-    handleMudarPagina(paginaAtual);
-  }, [paginaAtual]);
+  // useEffect(() => {
+  //   handleMudarPagina(paginaAtual);
+  // }, [paginaAtual]);
 
 
   return (
